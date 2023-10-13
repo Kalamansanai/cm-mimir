@@ -162,5 +162,7 @@ cython_debug/
 
 *.json
 *.pt
+*.png
+*.jpg
 assets/results
 assets/test_datasets
