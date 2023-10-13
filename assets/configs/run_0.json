@@ -1,0 +1,28 @@
+{
+    "roboflow": {
+        "api_key": "yOpj3WsdetMKERI8oDmX",
+        "workspace": "development-2023",
+        "project": "consumption-meter-numbers-colore",
+        "version": 6,
+        "format": "yolov8"
+    },
+    "model": {
+        "preproc": [
+            {
+                "name": "auto_brightness_contrast_grayscale",
+                "params": {
+                    "clip_hist_percent": 1
+                }
+            }
+        ],
+        "size": 224,
+        "batch": 16,
+        "name": "NumbersWaterMeters",
+        "model": "yolov8x.pt"
+    },
+    "test": {
+        "dataset_path": "./assets/test_dataset/test_0"
+    }
+}
+
+
