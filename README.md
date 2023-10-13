@@ -1,0 +1,2 @@
+# mimir
+testing AI models
