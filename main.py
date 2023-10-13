@@ -1,17 +1,24 @@
 import os
-import cv2
-import glob
 import json
-import numpy as np
-from PIL import Image
-from ultralytics import YOLO
-from roboflow import Roboflow
-import matplotlib.pyplot as plt
 from types import SimpleNamespace
-from wandb.integration.yolov8 import add_callbacks as add_wandb_callbacks
+from library.trainer import Trainer
 
+base_dir = "assets"
+if not os.path.exists(base_dir):
+    os.makedirs(base_dir)
 
-for file in os.listdir("./assets/configs"):
-    print(file)
-    # Itt egy tanítás
-    # Majd egy teszt
+subdirectories = ["configs", "results", "test_datasets"]
+for sub_dir in subdirectories:
+    dir_path = os.path.join(base_dir, sub_dir)
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+
+cnfs = "./assets/configs/"
+for path in os.listdir(cnfs):
+    with open(cnfs+path) as file:     
+        config = json.load(file, object_hook=lambda d: SimpleNamespace(**d))
+
+    
+    trn = Trainer(config)
+    # TODO run tests
+    
