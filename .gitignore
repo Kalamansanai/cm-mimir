@@ -166,3 +166,4 @@ cython_debug/
 *.jpg
 assets/results
 assets/test_datasets
+assets/datasets
