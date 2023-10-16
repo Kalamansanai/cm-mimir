@@ -1,15 +1,10 @@
 import os
 import cv2
-import glob
-import yaml
-import json
 import shutil
-import numpy as np
-from PIL import Image
 from ultralytics import YOLO
 from roboflow import Roboflow
-import matplotlib.pyplot as plt
 from types import SimpleNamespace
+import library.preprocessors as pre
 
 
 class Trainer:
@@ -65,12 +60,27 @@ class Trainer:
         '''
         pass
 
-    # TODO
     def preprocess(self) -> None:
-        '''
-        Placeholder for data preprocessing methods.
-        '''
-        pass
+        images_list = pre.find_and_read_jpg_images(self.destination_path)
+        
+        for preproc_item in self.config.model.preproc:
+            name = preproc_item.name  # A metódus neve
+            params = preproc_item.params  # A metódus paraméterei
+
+            # Convert SimpleNamespace to dict
+            params_dict = vars(params)
+
+            # Add image list to params
+            params_dict["images_list"] = images_list            
+
+            # Call method
+            method = getattr(pre, name)        
+            images_list = method(**params_dict)
+
+        # Save preprocessed images
+        for path, image in images_list:
+            cv2.imwrite(path, image)
+        
 
     def train(self):
         '''
