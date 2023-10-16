@@ -15,12 +15,21 @@ from types import SimpleNamespace
 class Trainer:
 
     def __init__(self, config: SimpleNamespace) -> None:
+        '''
+        Initializes a Trainer instance with the given configuration.
+        
+        :param config: A configuration object of type SimpleNamespace.
+        '''
         self.config = config
         self.model = YOLO(config.model.model)
 
         self.start()
 
     def start(self) -> None:
+        '''
+        Starts the training process, including data download, dataset movement, augmentation, preprocessing, and training.
+        Runs on init.
+        '''
         self.download_dataset()
         self.move_dataset()
         self.augment()
@@ -29,16 +38,16 @@ class Trainer:
 
     def download_dataset(self) -> None:
         '''
-        Downloads a dataset using Roboflow.
-
-        :return: None
+        Downloads a dataset using Roboflow.    
         '''
-        
         rf = Roboflow(api_key=self.config.roboflow.api_key)
         project = rf.workspace(self.config.roboflow.workspace).project(self.config.roboflow.project)
         self.dataset = project.version(self.config.roboflow.version).download("yolov8")
 
     def move_dataset(self) -> None:
+        '''
+        Moves the downloaded dataset to the specified destination directory.
+        '''
         self.source_path = self.dataset.location
         self.destination_path = f"assets/datasets/{self.dataset.location.split('/')[-1]}"
 
@@ -49,14 +58,27 @@ class Trainer:
         # Move the entire dataset directory to the destination directory
         shutil.move(self.source_path, self.destination_path)
 
+    # TODO
     def augment(self) -> None:
+        '''
+        Placeholder for data augmentation methods.
+        '''
         pass
 
+    # TODO
     def preprocess(self) -> None:
+        '''
+        Placeholder for data preprocessing methods.
+        '''
         pass
 
-    def train(self) -> None:
-        results = self.model.train(
+    def train(self):
+        '''
+        Trains the YOLO model with the specified parameters.
+        
+        :return: Result of ultralytics fit method 
+        '''
+        return self.model.train(
             data=f"assets/datasets/{self.dataset.location.split('/')[-1]}/data.yaml",
             project="assets/results",
             imgsz=self.config.model.size,

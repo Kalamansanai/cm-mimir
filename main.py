@@ -1,6 +1,5 @@
 import os
 import json
-import shutil
 from types import SimpleNamespace
 from library.trainer import Trainer
 
@@ -19,9 +18,9 @@ for sub_dir in subdirectories:
 
 # Iterate over configs, train and test models
 
-cnfs = "./assets/configs/"
+cnfs = os.path.join(base_dir, "configs")
 for path in os.listdir(cnfs):
-    with open(cnfs+path) as file:     
+    with open(os.path.join(cnfs, path)) as file:     
         config = json.load(file, object_hook=lambda d: SimpleNamespace(**d))
 
     
