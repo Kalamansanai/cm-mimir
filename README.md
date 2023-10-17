@@ -1,13 +1,9 @@
-
-  
-
-  
-
 # Documentation
 
   
 
-This framework is used to train and test multiple YOLO v8 object detection models with different configurations in a row. All the metrics will be saved separetly. You can define as many configurations in a json file as you like, and all of them will be executed in a row.
+This framework is used to train and test multiple YOLv8 object detection models with different configurations in a row. It is useful if you want to try different parameters, dataset, preprocessing or augmentation for training, and you don't want to wait for each training to finish, and adjust some arguments.
+All the metrics will be saved separately. You can define as many configurations in a json file as you like, and all of them will be executed in a row.
 
 Place your desired configuration json files in the `assets/configs` folder.
   
@@ -107,7 +103,7 @@ Place your desired configuration json files in the `assets/configs` folder.
 
   
 
-The dataset is annotated and stored on roboflow. Do not use any preprocessing or augmentation beacuse it will done locally! You can find the required parameters in the export tab on robofolow
+The dataset is annotated and stored on roboflow. For the json, you can find the required parameters in the export tab on robofolow.
 
   
 

@@ -29,7 +29,7 @@ class Trainer:
         '''
         self.download_dataset()
         self.move_dataset()
-        #self.augment_images()
+        self.augment_images()
         self.preprocess_images()
         self.train()
 
@@ -56,6 +56,10 @@ class Trainer:
         shutil.move(self.source_path, self.destination_path)
 
     def augment_images(self) -> None:
+        '''
+        Augment a list of images using methods specified in the configuration.                
+        '''
+
         images_list = pre.find_and_read_jpg_images(self.destination_path)
 
         processed = []

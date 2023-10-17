@@ -5,39 +5,24 @@ import imgaug as ia
 import imgaug.augmenters as iaa
 from typing import List
 
-# TODO Create new labels for augmented images
+def example(images_list: List, example_param: float) -> List: 
+    '''
+        This is an example method for image augmentation.
+        Each type of augmentation should have their own method
 
-def flip_v(images_list: List):
-
+        :param example_param: Just an example, defined in a config json
+        :return A list of only the augmented images in the format [(image_parent_folder_path, augmented_image)]
+    '''
     processed = []
-
-    vflip= iaa.Flipud(p=1.0)
     for item in images_list:
         image_path, image = item
 
-        image_vf= vflip.augment_image(image)
+        # Here you can implement some augmentation for 'image'
+        # TODO
 
         processed.append([
             image_path[:image_path.rindex("/")]+"/images", # Folder path for future save
-            image_vf
-        ])
-
-    return processed
-
-
-def flip_h(images_list: List):
-
-    processed = []
-
-    hflip= iaa.Fliplr(p=1.0)
-    for item in images_list:
-        image_path, image = item
-
-        image_hf = hflip.augment_image(image)
-
-        processed.append([
-            image_path[:image_path.rindex("/")]+"/images", # Folder path for future save
-            image_hf
+            image
         ])
 
     return processed
