@@ -27,7 +27,7 @@ def find_and_read_jpg_images(path: str) -> List:
 
 def grayscale(images_list: List) -> List:
     '''
-    Converts a list of images to grayscale and overwrites the original images.
+    Converts a list of images to grayscale.
     
     :param images_list: A list of image data, where each item is a list with [image_path, image_data].
     '''
@@ -111,7 +111,7 @@ def contrast(images_list: List, value: float) -> List:
 
 def auto_brightness_contrast_grayscale(images_list: List, clip_hist_percent: float) -> List:
     '''
-    WARNING: It should only be used standalone!
+    WARNING: Only for grayscale usage!
     Automatically adjust brightness and contrast for grayscale images.
 
     :param images_list: A list of image items where each item is a tuple (image_path, image).
@@ -125,9 +125,10 @@ def auto_brightness_contrast_grayscale(images_list: List, clip_hist_percent: flo
         image_path, image = item
         tmp = clip_hist_percent
 
-        print("Processing image:", image_path)
-
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        if len(image.shape) == 2:
+            gray = image
+        else:
+            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         # Calculate grayscale histogram
         hist = cv2.calcHist([gray], [0], None, [256], [0, 256])
@@ -142,8 +143,6 @@ def auto_brightness_contrast_grayscale(images_list: List, clip_hist_percent: flo
         maximum = accumulator[-1]
         tmp *= (maximum / 100.0)
         tmp /= 2.0
-
-        print("Histogram size:", len(accumulator), "Clip threshold:", tmp)
 
         # Locate left cut
         minimum_gray = 0

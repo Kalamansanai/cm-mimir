@@ -1,10 +1,12 @@
 import os
 import cv2
+import time
 import shutil
 from ultralytics import YOLO
 from roboflow import Roboflow
 from types import SimpleNamespace
 import library.preprocessors as pre
+import library.augmentators as aug
 
 
 class Trainer:
@@ -27,8 +29,8 @@ class Trainer:
         '''
         self.download_dataset()
         self.move_dataset()
-        self.augment()
-        self.preprocess()
+        #self.augment_images()
+        self.preprocess_images()
         self.train()
 
     def download_dataset(self) -> None:
@@ -53,27 +55,50 @@ class Trainer:
         # Move the entire dataset directory to the destination directory
         shutil.move(self.source_path, self.destination_path)
 
-    # TODO
-    def augment(self) -> None:
-        '''
-        Placeholder for data augmentation methods.
-        '''
-        pass
+    def augment_images(self) -> None:
+        images_list = pre.find_and_read_jpg_images(self.destination_path)
 
-    def preprocess(self) -> None:
+        processed = []
+        for augment_item in self.config.model.augment:
+            name = augment_item.name  # Name of the method
+            params = augment_item.params  # Parameters of the method
+
+            # Convert SimpleNamespace to a dictionary
+            params_dict = vars(params)
+
+            # Add the image list to the parameters
+            params_dict["images_list"] = images_list            
+
+            # Call the method
+            method = getattr(aug, name)      
+            images_list = method(**params_dict)
+
+            # Append result to rest
+            for i in images_list :
+                processed.append(i)
+
+        # Save augmented images
+        for path, image in processed:
+            cv2.imwrite(os.path.join(path, f"{round(time.time() * 1000)}.jpg"), image)            
+
+
+    def preprocess_images(self) -> None:
+        '''
+        Preprocess a list of images using methods specified in the configuration.                
+        '''
         images_list = pre.find_and_read_jpg_images(self.destination_path)
         
         for preproc_item in self.config.model.preproc:
-            name = preproc_item.name  # A metódus neve
-            params = preproc_item.params  # A metódus paraméterei
+            name = preproc_item.name  # Name of the method
+            params = preproc_item.params  # Parameters of the method
 
-            # Convert SimpleNamespace to dict
+            # Convert SimpleNamespace to a dictionary
             params_dict = vars(params)
 
-            # Add image list to params
+            # Add the image list to the parameters
             params_dict["images_list"] = images_list            
 
-            # Call method
+            # Call the method
             method = getattr(pre, name)        
             images_list = method(**params_dict)
 
